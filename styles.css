@@ -1,0 +1,201 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.layout {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1170px;
+}
+
+.content {
+  flex-grow: 2;
+}
+
+.header {
+  background-color: #3C1491;
+  color: #fff;
+}
+
+.header__content {
+  display: flex;
+  align-items: center;
+  height: 68px;
+}
+
+.logo {
+  display: block;
+  background: url('./logo.png') no-repeat;
+  width: 45px;
+  height: 36px;
+  margin-right: auto;
+}
+
+.header__link {
+  color: #fff;
+  line-height: 22px;
+  font-size: 18px;
+  margin-left: 25px;
+  text-decoration: none;
+}
+
+.footer {
+  height: 61px;
+  background-color: #3C1491;
+  color: #fff;
+}
+
+.copyright {
+  margin: 20px 0 0;
+  line-height: 20px;
+  font-size: 14px;
+}
+
+.hidden {
+  display: none;
+}
+
+/*Card-requisites*/
+
+html {
+  font-family: Roboto;
+}
+
+.page {}
+
+.page__req {
+  margin: 0 auto;
+  width: 370px;
+  font-size: 0;
+}
+
+.h3 {
+  line-height: 46px;
+  font-size: 36px;
+  text-align: center;
+  color: #333;
+}
+
+.input-field {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.input-field._row {
+  display: inline-block;
+  width: 50%;
+  text-align: left;
+}
+
+.input-field__wrapper {
+  position: relative;
+}
+
+.input-field__label {
+  display: block;
+  margin-bottom: 5px;
+  line-height: 26px;
+  font-size: 18px;
+  color: #333;
+  text-align: left;
+}
+
+.input-field__input {
+  width: 100%;
+  height: 42px;
+  background: #fff;
+  border: 1px solid #cecece;
+  text-indent: 5px;
+}
+
+.input-field__input._error {
+  border-color: #E30000;
+}
+
+.input-field__input._small {
+  width: 58px;
+  margin-right: 10px;
+}
+
+.input-field__input:focus {
+  outline: 1px solid #cacaca;
+}
+
+.separator {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.btn {
+  width: 130px;
+  height: 38px;
+  background: #3C1491;
+  border: 1px solid #3C1491;
+  border-radius: 1px;
+  line-height: 20px;
+  font-size: 16px;
+  text-align: center;
+  color: #fff;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+.tooltip {
+  position: relative;
+  box-sizing: border-box;
+  position: absolute;
+  right: -266px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.2);
+  padding: 15px 20px;
+  width: 250px;
+  min-height: 25px;
+  font-size: 14px;
+  z-index: 2;
+}
+
+.tooltip._hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.tooltip._visible {
+  transition: transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1);
+  opacity: 1;
+  visibility: visible;
+}
+
+.tooltip:before {
+  content: '';
+  border: 9px solid transparent;
+  border-right: 9px solid #d0d0d0;
+  position: absolute;
+  top: 50%;
+  left: -18px;
+  transform: translateY(-50%);
+}
+
+.tooltip:after {
+  position: absolute;
+  content: '';
+  border: 8px solid transparent;
+  border-right: 8px solid #fff;
+  position: absolute;
+  top: 50%;
+  left: -16px;
+  transform: translateY(-50%);
+}
