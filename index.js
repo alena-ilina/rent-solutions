@@ -18,8 +18,7 @@ const dateErrors = {
   2: 'Такого номера месяца не существует',
   3: 'Год должен иметь двузначный формат',
   4: 'Год окончания действия карты не может быть меньше текущего года',
-  5: 'Чет слишком большой срок годности у карты',
-  6: 'Текущая дата уже прошла'
+  5: 'Чет слишком большой срок годности у карты'
 }
 
 function isEmpty(value) {
@@ -104,78 +103,75 @@ function cardNumberValidate(cardNumberValue) {
   }
 }
 
-function cardDateValidation(cardMonthValue, cardYearValue) {
-  if (!cardYearValue && !cardMonthValue) {
+function cardMonthValidation(cardMonthValue) {
+  if (!cardMonthValue) {
     return {
       isError: false,
       errorText: ''
     }
   }
 
-  if (cardMonthValue) {
-    if (Number.isNaN(Number(cardMonthValue))) {
-      return {
-        isError: true,
-        errorText: commonErrors['2']
-      }
-    }
-
-    if (cardMonthValue.length !== 2) {
-      return {
-        isError: true,
-        errorText: dateErrors['1']
-      }
-    }
-
-    if (+cardMonthValue > 12 || +cardMonthValue < 1) {
-      return {
-        isError: true,
-        errorText: dateErrors['2']
-      }
+  if (Number.isNaN(Number(cardMonthValue))) {
+    return {
+      isError: true,
+      errorText: commonErrors['2']
     }
   }
 
-  const currentDate = new Date()
-  const currentYear = currentDate.getFullYear().toString().slice(2)
-
-  if (cardYearValue) {
-
-    if (Number.isNaN(Number(cardYearValue))) {
-      return {
-        isError: true,
-        errorText: commonErrors['2']
-      }
+  if (cardMonthValue.length !== 2) {
+    return {
+      isError: true,
+      errorText: dateErrors['1']
     }
-    if (cardYearValue.length !== 2) {
-      return {
-        isError: true,
-        errorText: dateErrors['1']
-      }
+  }
+
+  if (+cardMonthValue > 12 || +cardMonthValue < 1) {
+    return {
+      isError: true,
+      errorText: dateErrors['2']
     }
+  }
 
-    if (currentYear > cardYearValue) {
-      return {
-        isError: true,
-        errorText: dateErrors['4']
-      }
+  return {
+    isError: false,
+    errorText: ''
+  }
+}
+
+function cardYearValidation(cardYearValue) {
+  if (!cardYearValue) {
+    return {
+      isError: false,
+      errorText: ''
     }
+  }
 
-    if (cardYearValue > (+currentYear + 5)) {
-      return {
-        isError: true,
-        errorText: dateErrors['5']
-      }
+  const currentYear = new Date().getFullYear().toString().slice(2)
+
+  if (Number.isNaN(Number(cardYearValue))) {
+    return {
+      isError: true,
+      errorText: commonErrors['2']
     }
+  }
+  if (cardYearValue.length !== 2) {
+    return {
+      isError: true,
+      errorText: dateErrors['1']
+    }
+  }
 
-    if (currentYear === cardYearValue) {
-      const currentMonth = currentDate.getMonth() + 1
+  if (+currentYear > +cardYearValue) {
+    return {
+      isError: true,
+      errorText: dateErrors['4']
+    }
+  }
 
-      if (currentMonth >= +cardMonthValue) {
-        return {
-          isError: true,
-          errorText: dateErrors['6']
-        }
-      }
+  if (+cardYearValue > (+currentYear + 5)) {
+    return {
+      isError: true,
+      errorText: dateErrors['5']
     }
   }
 
@@ -197,7 +193,7 @@ function renderError(tooltipDataId, error, elem) {
   elem.classList.add('_error')
 }
 
-function hideError(tooltipDataId, elem, additionalElem) {
+function hideError(tooltipDataId, elem) {
   const tooltip = document.querySelector(`[data-id=${tooltipDataId}]`)
 
   if (!tooltip) throw Error('Что-то пошло не так')
@@ -207,8 +203,6 @@ function hideError(tooltipDataId, elem, additionalElem) {
   tooltip.classList.add('_hidden')
 
   elem.classList.remove('_error')
-
-  if (additionalElem) additionalElem.classList.remove('_error')
 }
 
 function renderNumberValue(value) {
@@ -222,11 +216,9 @@ function renderNumberValue(value) {
   return valueArray.reduce(reducer)
 }
 
-function commonValidate(elem, validateFunction, tooltipDataId, additionalDate) {
+function commonValidate(elem, validateFunction, tooltipDataId) {
   const elemValue = elem.value.trim()
-  let elemError = additionalDate
-    ? validateFunction(elemValue, additionalDate.value)
-    : validateFunction(elemValue)
+  let elemError = validateFunction(elemValue)
 
   elemError = !elemError.isError && isEmpty(elemValue)
 
@@ -242,7 +234,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const cardNumberDataId = 'card-number'
   const cardCVVDataId = 'card-cvv'
-  const cardDateDataId = 'card-date'
+  const cardMonthDataId = 'card-month'
+  const cardYearDataId = 'card-year'
 
   if (!cardNumber || !cardMonth || !cardYear || !cardCVV) {
     throw Error('Ошибка загрузки страницы');
@@ -264,24 +257,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /*Валидация месяца действия карты*/
   cardMonth.addEventListener('blur', function () {
-    const error = cardDateValidation(this.value.trim(), cardYear.value)
+    const error = cardMonthValidation(this.value.trim())
 
-    if (error.isError) renderError(cardDateDataId, error.errorText, this, cardYear)
+    if (error.isError) renderError(cardMonthDataId, error.errorText, this)
   })
 
   cardMonth.addEventListener('keyup', function () {
-    hideError(cardDateDataId, this)
+    hideError(cardMonthDataId, this)
   })
 
   // /*Валидация года действия карты*/
   cardYear.addEventListener('blur', function () {
-    const error = cardDateValidation( cardMonth.value, this.value.trim())
+    const error = cardYearValidation(this.value.trim())
 
-    if (error.isError) renderError(cardDateDataId, error.errorText, this, cardMonth)
+    if (error.isError) renderError(cardYearDataId, error.errorText, this)
   })
 
   cardYear.addEventListener('keyup', function () {
-    hideError(cardDateDataId, this)
+    hideError(cardYearDataId, this)
   })
 
   /* Валидация CVV кода */
@@ -299,8 +292,8 @@ document.addEventListener('DOMContentLoaded', function () {
     event.preventDefault()
 
     commonValidate(cardNumber, cardNumberValidate, cardNumberDataId)
-    commonValidate(cardMonth, cardDateValidation, cardDateDataId, cardYear)
-    commonValidate(cardYear, cardDateValidation, cardDateDataId, cardMonth)
+    commonValidate(cardMonth, cardMonthValidation, cardMonthDataId)
+    commonValidate(cardYear, cardYearValidation, cardYearDataId)
     commonValidate(cardCVV, CVVValidate, cardCVVDataId)
   })
 })
